@@ -21,13 +21,11 @@ class MenuItem(models.Model):
     )
     level = models.PositiveSmallIntegerField(
         verbose_name='Уровень',
-        default=0,
-        editable=False
+        default=1
     )
     position = models.PositiveSmallIntegerField(
         verbose_name='Позиция',
-        default=0,
-        editable=False
+        default=1
     )
 
     def __str__(self):
@@ -42,4 +40,6 @@ class MenuItem(models.Model):
         if self.parent:
             self.level = self.parent.level + 1
         else:
-            self.level = 0
+            self.level = 1
+
+        super(MenuItem, self).save()
