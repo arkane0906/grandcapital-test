@@ -1,0 +1,7 @@
+{% load menu_tags %}
+
+<ul>
+    {% for menu_item in menu.root_items %}
+        {% draw_menu_item menu_item %}
+    {% endfor %}
+</ul>
