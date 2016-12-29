@@ -18,6 +18,7 @@ from django.contrib import admin
 import menu.views
 
 urlpatterns = [
-	url(r'^$', menu.views.menu, name='index'),
     url(r'^admin/', admin.site.urls),
+    url(r'^(?P<menu_item_url>[\w-]+)', menu.views.show_page, name='show_page'),
+	url(r'^$', menu.views.menu, name='index'),
 ]
