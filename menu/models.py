@@ -39,16 +39,22 @@ class MenuItem(models.Model):
             self.level = 1
 
         if self.pk:
+            # если пункт уже создан 
             new_parent = self.parent
             old_parent = MenuItem.objects.get(pk=self.pk).parent
             if old_parent != new_parent:
+                # если изменился родитель
                 if new_parent:
-                    calc_positions(new_parent.children())
-                    self.rank = new_parent.children().count()+1
-                super(MenuItem, self).save(force_insert, **kwargs)
+                    # если выбран новый родитель - посчитать позиции
+                    calc_positions(new_parent.child_items().order_by('position'))
+                    self.position = new_parent.child_items().count()
                 if old_parent:
-                    calc_positions(old_parent.children())
-            else:
-                super(MenuItem, self).save(force_insert, **kwargs)
+                    # если был прежний родитель - посчитать позиции
+                    calc_positions(old_parent.child_items().order_by('position'))
         else:
-            super(MenuItem, self).save(force_insert, **kwargs)
+            if self.parent:
+                self.position = self.parent.child_items().count() + 1
+            else:
+                self.position = self.menu.root_items().count() + 1
+        
+        super(MenuItem, self).save(force_insert, **kwargs)
